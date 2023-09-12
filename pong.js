@@ -81,6 +81,9 @@ function drawPaddleTwo(up_key_name, down_key_name) {
         }
     };
 };
+var paddleOne = drawPaddleOne('K_w', 'K_s');
+var paddleTwo = drawPaddleTwo('K_Up', 'K_Down');
+let paddles = paddleOne + paddleTwo
 
 function drawBall() {
     return {
@@ -101,7 +104,7 @@ function drawBall() {
             ball.x += ball.vx;
             ball.y += ball.vy;
         },
-        colision() {
+        canvasCollision() {
             if (ball.y + ball.vy > canvas.height || ball.y + ball.vy < 0) {
                 ball.vy = -ball.vy;
             }
@@ -112,8 +115,6 @@ function drawBall() {
     };
 };
 
-var paddleOne = drawPaddleOne('K_w', 'K_s');
-var paddleTwo = drawPaddleTwo('K_Up', 'K_Down');
 var ball = drawBall();
 
 //Draw Phase
@@ -126,6 +127,6 @@ function main() {
     paddleTwo.draw();
     ball.draw();
     ball.update();
-    ball.colision();
+    ball.canvasCollision();
     // window.requestAnimationFrame(draw);
 };
