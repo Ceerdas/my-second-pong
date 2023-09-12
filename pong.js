@@ -36,12 +36,14 @@ function drawPaddleOne(up_key_name, down_key_name) {
     return {
         x: 0,
         y: 0,
+        width: 20,
+        height: 100,
         vx: 5,
         vy: 5,
         color: "black",
         draw() {
             ctx.beginPath();
-            ctx.rect(this.x, this.y, 20, 100);
+            ctx.rect(this.x, this.y, this.width, this.height);
             ctx.stroke();
             ctx.fillStyle = this.color;
             ctx.fill();
@@ -61,12 +63,14 @@ function drawPaddleTwo(up_key_name, down_key_name) {
     return {
         x: 780,
         y: 0,
+        width: 20,
+        height: 100,
         vx: 5,
         vy: 5,
         color: "red",
         draw() {
             ctx.beginPath();
-            ctx.rect(this.x, this.y, 20, 100);
+            ctx.rect(this.x, this.y, this.width, this.height);
             ctx.fillStyle = this.color;
             ctx.stroke();
             ctx.fill();
@@ -83,13 +87,12 @@ function drawPaddleTwo(up_key_name, down_key_name) {
 };
 var paddleOne = drawPaddleOne('K_w', 'K_s');
 var paddleTwo = drawPaddleTwo('K_Up', 'K_Down');
-let paddles = paddleOne + paddleTwo
 
 function drawBall() {
     return {
-        x: 40,
-        y: 40,
-        vx: 5,
+        x: 200,
+        y: 100,
+        vx: 10,
         vy: 2,
         radius: 8,
         color: "gray",
@@ -104,18 +107,62 @@ function drawBall() {
             ball.x += ball.vx;
             ball.y += ball.vy;
         },
-        canvasCollision() {
-            if (ball.y + ball.vy > canvas.height || ball.y + ball.vy < 0) {
-                ball.vy = -ball.vy;
-            }
-            if (ball.x + ball.vx > canvas.width || ball.x + ball.vx < 0) {
-                ball.vx = -ball.vx;
-            }
-        }
     };
 };
 
 var ball = drawBall();
+
+function collision() {
+    if (paddleOne.x < ball.x + ball.radius && paddleOne.x + paddleOne.width > ball.x - ball.radius && paddleOne.y < ball.y + ball.radius && paddleOne.y + paddleOne.height > ball.y) {
+        ball.vx = -ball.vx;
+    };
+    if (paddleTwo.x < ball.x + ball.radius && paddleTwo.x + paddleTwo.width > ball.x - ball.radius && paddleTwo.y < ball.y + ball.radius && paddleTwo.y + paddleTwo.height > ball.y) {
+        ball.vx = -ball.vx;
+    };
+};
+
+function canvasCollision() {
+    if (ball.y + ball.vy > canvas.height || ball.y + ball.vy < 0) {
+        ball.vy = -ball.vy;
+    };
+};
+
+var homeScore = 0;
+var awayScore = 0;
+
+function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText(`Home Score: ${homeScore}`, 100, 20);
+    ctx.fillText(`Away Score: ${awayScore}`, 600, 20);
+};
+
+function scoreCount() {
+    if (ball.x > canvas.width) {
+        homeScore += 1;
+    }
+    if (ball.x < 0) {
+        awayScore += 1;
+    }
+}
+function resetBall() {
+    if (ball.x > canvas.width) {
+        ball.x = 200;
+    }
+    if (ball.x < 0) {
+        ball.x = 400;
+    }
+}
+
+function gameOver() {
+
+    if (homeScore === 15) {
+        alert("YOU WON, CONGRATULATIONS!");
+    }
+    if (awayScore === 15) {
+        alert("YOU LOST, TRY AGAIN NEXT TIME!");
+    };
+};
 
 //Draw Phase
 
@@ -127,6 +174,11 @@ function main() {
     paddleTwo.draw();
     ball.draw();
     ball.update();
-    ball.canvasCollision();
+    canvasCollision();
+    drawScore();
+    scoreCount();
+    collision();
+    resetBall();
+    gameOver();
     // window.requestAnimationFrame(draw);
 };
