@@ -4,46 +4,17 @@ const canvas = document.getElementById("squareCanvas");
 const ctx = canvas.getContext("2d");
 setInterval(main, 16)
 
+//shared by the paddles
+
 var keys = {
     K_w: false,
-    K_a: false,
     K_s: false,
-    K_d: false,
     K_Up: false,
     K_Down: false,
-    K_Right: false,
-    K_Left: false,
 };
 
-function draw_square(up_key_name, left_key_name, down_key_name, right_key_name) {
-    return {
-        x: 0,
-        y: 0,
-        vx: 1,
-        vy: 1,
-        draw() {
-            ctx.beginPath();
-            ctx.rect(this.x, this.y, 100, 100);
-            ctx.stroke();
-        },
-        update() {
-            if (keys[up_key_name]) {
-                this.y -= this.vy;
-            };
-            if (keys[down_key_name]) {
-                this.y += this.vy;
-            };
-            if (keys[right_key_name]) {
-                this.x += this.vx;
-            };
-            if (keys[left_key_name]) {
-                this.x -= this.vx;
-            };
-        }
-    };
-};
 var keyDict = {
-    'w': 'K_w', 
+    'w': 'K_w',
     'a': 'K_a',
     's': 'K_s',
     'd': 'K_d',
@@ -61,16 +32,100 @@ window.onkeyup = function (e) {
     keys[keyDict[e.key]] = false;
 }
 
-var square = draw_square('K_w', 'K_a', 'K_s', 'K_d');
-var square2 = draw_square('K_Up', 'K_Left', 'K_Down', 'K_Right');
+function drawPaddleOne(up_key_name, down_key_name) {
+    return {
+        x: 0,
+        y: 0,
+        vx: 5,
+        vy: 5,
+        color: "black",
+        draw() {
+            ctx.beginPath();
+            ctx.rect(this.x, this.y, 20, 100);
+            ctx.stroke();
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        },
+        update() {
+            if (keys[up_key_name]) {
+                this.y -= this.vy;
+            };
+            if (keys[down_key_name]) {
+                this.y += this.vy;
+            };
+        }
+    };
+};
+
+function drawPaddleTwo(up_key_name, down_key_name) {
+    return {
+        x: 780,
+        y: 0,
+        vx: 5,
+        vy: 5,
+        color: "red",
+        draw() {
+            ctx.beginPath();
+            ctx.rect(this.x, this.y, 20, 100);
+            ctx.fillStyle = this.color;
+            ctx.stroke();
+            ctx.fill();
+        },
+        update() {
+            if (keys[up_key_name]) {
+                this.y -= this.vy;
+            };
+            if (keys[down_key_name]) {
+                this.y += this.vy;
+            };
+        }
+    };
+};
+
+function drawBall() {
+    return {
+        x: 40,
+        y: 40,
+        vx: 5,
+        vy: 2,
+        radius: 8,
+        color: "gray",
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.stroke();
+        },
+        update() {
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+        },
+        colision() {
+            if (ball.y + ball.vy > canvas.height || ball.y + ball.vy < 0) {
+                ball.vy = -ball.vy;
+            }
+            if (ball.x + ball.vx > canvas.width || ball.x + ball.vx < 0) {
+                ball.vx = -ball.vx;
+            }
+        }
+    };
+};
+
+var paddleOne = drawPaddleOne('K_w', 'K_s');
+var paddleTwo = drawPaddleTwo('K_Up', 'K_Down');
+var ball = drawBall();
 
 //Draw Phase
 
 function main() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    square.update();
-    square.draw();
-    square2.update();
-    square2.draw();
+    paddleOne.update();
+    paddleOne.draw();
+    paddleTwo.update();
+    paddleTwo.draw();
+    ball.draw();
+    ball.update();
+    ball.colision();
     // window.requestAnimationFrame(draw);
 };
