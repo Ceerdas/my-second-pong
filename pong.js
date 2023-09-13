@@ -11,7 +11,7 @@ var keys = {
     K_s: false,
     K_Up: false,
     K_Down: false,
-   // K_Space: false,
+    K_Space: false,
 };
 
 var keyDict = {
@@ -23,8 +23,11 @@ var keyDict = {
     'ArrowLeft': 'K_Left',
     'ArrowDown': 'K_Down',
     'ArrowRight': 'K_Right',
-   // ' ': 'K_Space',
 };
+
+var KeyStart = {
+    ' ': 'K_Space',
+}
 
 window.onkeydown = function (e) {
     keys[keyDict[e.key]] = true;
@@ -32,7 +35,11 @@ window.onkeydown = function (e) {
 
 window.onkeyup = function (e) {
     keys[keyDict[e.key]] = false;
-}
+};
+
+window.onkeydown = function (e) {
+    keys[KeyStart[e.key]] = true;
+};
 
 function drawPaddleOne(up_key_name, down_key_name) {
     return {
@@ -112,7 +119,7 @@ function getRandomSpeed(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-function drawBall() {
+function drawBall(space_key_name) {
     return {
         x: 400,
         y: 300,
@@ -127,9 +134,11 @@ function drawBall() {
             ctx.fill();
             ctx.stroke();
         },
-        update() {
+        update()       {      
+        if (keys[space_key_name]) {
             ball.x += ball.vx;
             ball.y += ball.vy;
+        };
         },
     };
 };
