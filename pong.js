@@ -11,6 +11,7 @@ var keys = {
     K_s: false,
     K_Up: false,
     K_Down: false,
+   // K_Space: false,
 };
 
 var keyDict = {
@@ -22,6 +23,7 @@ var keyDict = {
     'ArrowLeft': 'K_Left',
     'ArrowDown': 'K_Down',
     'ArrowRight': 'K_Right',
+   // ' ': 'K_Space',
 };
 
 window.onkeydown = function (e) {
@@ -34,7 +36,7 @@ window.onkeyup = function (e) {
 
 function drawPaddleOne(up_key_name, down_key_name) {
     return {
-        x: 0,
+        x: 5,
         y: 0,
         width: 20,
         height: 100,
@@ -55,13 +57,21 @@ function drawPaddleOne(up_key_name, down_key_name) {
             if (keys[down_key_name]) {
                 this.y += this.vy;
             };
+        },
+        constrain() {
+            if (this.y < 0) {
+                this.y = 0
+            }
+            else if (this.y > 500) {
+                this.y = 500
+            }
         }
     };
 };
 
 function drawPaddleTwo(up_key_name, down_key_name) {
     return {
-        x: 780,
+        x: 775,
         y: 0,
         width: 20,
         height: 100,
@@ -82,18 +92,32 @@ function drawPaddleTwo(up_key_name, down_key_name) {
             if (keys[down_key_name]) {
                 this.y += this.vy;
             };
+        },
+        constrain() {
+            if (this.y < 0) {
+                this.y = 0
+            }
+            else if (this.y > 500) {
+                this.y = 500
+            }
         }
     };
 };
 var paddleOne = drawPaddleOne('K_w', 'K_s');
 var paddleTwo = drawPaddleTwo('K_Up', 'K_Down');
 
+function getRandomSpeed(min, max) {
+    min = Math.ceil(6);
+    max = Math.floor(12);
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
 function drawBall() {
     return {
-        x: 200,
-        y: 100,
-        vx: 10,
-        vy: 2,
+        x: 400,
+        y: 300,
+        vx: getRandomSpeed(),
+        vy: getRandomSpeed(),
         radius: 8,
         color: "gray",
         draw() {
@@ -110,7 +134,7 @@ function drawBall() {
     };
 };
 
-var ball = drawBall();
+var ball = drawBall('K_Space');
 
 function collision() {
     if (paddleOne.x < ball.x + ball.radius && paddleOne.x + paddleOne.width > ball.x - ball.radius && paddleOne.y < ball.y + ball.radius && paddleOne.y + paddleOne.height > ball.y) {
@@ -147,10 +171,10 @@ function scoreCount() {
 }
 function resetBall() {
     if (ball.x > canvas.width) {
-        ball.x = 200;
+        ball.x = 400;
     }
     if (ball.x < 0) {
-        ball.x = 400;
+        ball.x = 400; 
     }
 }
 
@@ -170,8 +194,10 @@ function main() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     paddleOne.update();
     paddleOne.draw();
+    paddleOne.constrain();
     paddleTwo.update();
     paddleTwo.draw();
+    paddleTwo.constrain();
     ball.draw();
     ball.update();
     canvasCollision();
@@ -180,5 +206,6 @@ function main() {
     collision();
     resetBall();
     gameOver();
+   
     // window.requestAnimationFrame(draw);
 };
