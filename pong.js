@@ -11,7 +11,6 @@ var keys = {
     K_s: false,
     K_Up: false,
     K_Down: false,
-    K_Space: false,
 };
 
 var keyDict = {
@@ -25,20 +24,12 @@ var keyDict = {
     'ArrowRight': 'K_Right',
 };
 
-var KeyStart = {
-    ' ': 'K_Space',
-}
-
 window.onkeydown = function (e) {
     keys[keyDict[e.key]] = true;
 };
 
 window.onkeyup = function (e) {
     keys[keyDict[e.key]] = false;
-};
-
-window.onkeydown = function (e) {
-    keys[KeyStart[e.key]] = true;
 };
 
 function drawPaddleOne(up_key_name, down_key_name) {
@@ -119,6 +110,18 @@ function getRandomSpeed(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
+var space = {
+    K_Space: false,
+}
+
+var KeyStart = {
+    ' ': 'K_Space',
+}
+
+window.onkeydown = function (evt) {
+    space[KeyStart[evt.key]] = true;
+};
+
 function drawBall(space_key_name) {
     return {
         x: 400,
@@ -134,11 +137,11 @@ function drawBall(space_key_name) {
             ctx.fill();
             ctx.stroke();
         },
-        update()       {      
-        if (keys[space_key_name]) {
-            ball.x += ball.vx;
-            ball.y += ball.vy;
-        };
+        update() {
+            if (space[space_key_name]) {
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+            };
         },
     };
 };
@@ -183,10 +186,10 @@ function resetBall() {
         ball.x = 400;
     }
     if (ball.x < 0) {
-        ball.x = 400; 
+        ball.x = 400;
     }
 }
-
+/*
 function gameOver() {
 
     if (homeScore === 15) {
@@ -195,7 +198,13 @@ function gameOver() {
     if (awayScore === 15) {
         alert("YOU LOST, TRY AGAIN NEXT TIME!");
     };
-};
+};*/
+
+function gameOverScreen() {
+    if (homeScore === 15 || awayScore === 15) {
+        window.location.replace("gameover.html")
+    }
+}
 
 //Draw Phase
 
@@ -214,7 +223,8 @@ function main() {
     scoreCount();
     collision();
     resetBall();
-    gameOver();
-   
+    //gameOver();
+    gameOverScreen();
+
     // window.requestAnimationFrame(draw);
 };
