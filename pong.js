@@ -32,6 +32,8 @@ window.onkeyup = function (e) {
     keys[keyDict[e.key]] = false;
 };
 
+// paddles
+
 function drawPaddleOne(up_key_name, down_key_name) {
     return {
         x: 5,
@@ -104,6 +106,9 @@ function drawPaddleTwo(up_key_name, down_key_name) {
 var paddleOne = drawPaddleOne('K_w', 'K_s');
 var paddleTwo = drawPaddleTwo('K_Up', 'K_Down');
 
+
+// ball
+
 function getRandomSpeed(min, max) {
     min = Math.ceil(6);
     max = Math.floor(12);
@@ -146,6 +151,18 @@ function drawBall(space_key_name) {
     };
 };
 
+function resetBall() {
+    if (ball.x > canvas.width) {
+        ball.x = 400;
+    }
+    if (ball.x < 0) {
+        ball.x = 400;
+    }
+}
+
+
+// collision
+
 var ball = drawBall('K_Space');
 
 function collision() {
@@ -162,6 +179,8 @@ function canvasCollision() {
         ball.vy = -ball.vy;
     };
 };
+
+// score 
 
 var homeScore = 0;
 var awayScore = 0;
@@ -181,14 +200,7 @@ function scoreCount() {
         awayScore += 1;
     }
 }
-function resetBall() {
-    if (ball.x > canvas.width) {
-        ball.x = 400;
-    }
-    if (ball.x < 0) {
-        ball.x = 400;
-    }
-}
+
 /*
 function gameOver() {
 
