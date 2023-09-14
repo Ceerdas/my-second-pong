@@ -123,9 +123,11 @@ var KeyStart = {
     ' ': 'K_Space',
 }
 
+/*
 window.onkeydown = function (evt) {
     space[KeyStart[evt.key]] = true;
 };
+*/
 
 function drawBall(space_key_name) {
     return {
@@ -160,10 +162,9 @@ function resetBall() {
     }
 }
 
+var ball = drawBall('K_Space');
 
 // collision
-
-var ball = drawBall('K_Space');
 
 function collision() {
     if (paddleOne.x < ball.x + ball.radius && paddleOne.x + paddleOne.width > ball.x - ball.radius && paddleOne.y < ball.y + ball.radius && paddleOne.y + paddleOne.height > ball.y) {
