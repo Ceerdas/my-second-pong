@@ -39,7 +39,7 @@ function drawPaddleOne(up_key_name, down_key_name) {
         x: 5,
         y: 0,
         width: 20,
-        height: 12s0,
+        height: 120,
         vy: 10,
         color: "black",
         draw() {
@@ -173,10 +173,10 @@ var ball = drawBall('K_Space');
 // collision
 
 function collision() {
-    if (paddleOne.x < ball.x + ball.radius && paddleOne.x + paddleOne.width > ball.x - ball.radius && paddleOne.y < ball.y + ball.radius && paddleOne.y + paddleOne.height > ball.y) {
+    if (paddleOne.x < ball.x + ball.radius && paddleOne.x + paddleOne.width > ball.x - ball.radius && paddleOne.y < ball.y + ball.radius && paddleOne.y + paddleOne.height > ball.y - ball.radius) {
         ball.vx = -ball.vx;
     };
-    if (paddleTwo.x < ball.x + ball.radius && paddleTwo.x + paddleTwo.width > ball.x - ball.radius && paddleTwo.y < ball.y + ball.radius && paddleTwo.y + paddleTwo.height > ball.y) {
+    if (paddleTwo.x < ball.x + ball.radius && paddleTwo.x + paddleTwo.width > ball.x - ball.radius && paddleTwo.y < ball.y + ball.radius && paddleTwo.y + paddleTwo.height > ball.y - ball.radius) {
         ball.vx = -ball.vx;
     };
 };
