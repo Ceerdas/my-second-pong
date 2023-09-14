@@ -39,9 +39,8 @@ function drawPaddleOne(up_key_name, down_key_name) {
         x: 5,
         y: 0,
         width: 20,
-        height: 100,
-        vx: 5,
-        vy: 5,
+        height: 12s0,
+        vy: 10,
         color: "black",
         draw() {
             ctx.beginPath();
@@ -62,8 +61,8 @@ function drawPaddleOne(up_key_name, down_key_name) {
             if (this.y < 0) {
                 this.y = 0
             }
-            else if (this.y > 500) {
-                this.y = 500
+            else if (this.y > canvas.height - this.height) {
+                this.y = canvas.height - this.height
             }
         }
     };
@@ -74,9 +73,8 @@ function drawPaddleTwo(up_key_name, down_key_name) {
         x: 775,
         y: 0,
         width: 20,
-        height: 100,
-        vx: 5,
-        vy: 5,
+        height: 120,
+        vy: 10,
         color: "red",
         draw() {
             ctx.beginPath();
@@ -97,14 +95,15 @@ function drawPaddleTwo(up_key_name, down_key_name) {
             if (this.y < 0) {
                 this.y = 0
             }
-            else if (this.y > 500) {
-                this.y = 500
+            else if (this.y > canvas.height - this.height) {
+                this.y = canvas.height - this.height
             }
         }
     };
 };
 var paddleOne = drawPaddleOne('K_w', 'K_s');
 var paddleTwo = drawPaddleTwo('K_Up', 'K_Down');
+
 
 
 // ball
@@ -124,15 +123,22 @@ var KeyStart = {
 }
 
 /*
+do {
 window.onkeydown = function (evt) {
     space[KeyStart[evt.key]] = true;
 };
+}
+while (homeScore < 15 || awayScore < 15)
 */
+
+let xMiddle = (canvas.width / 2);
+let yMiddle = (canvas.height / 2);
+console.log(xMiddle, yMiddle);
 
 function drawBall(space_key_name) {
     return {
-        x: 400,
-        y: 300,
+        x: xMiddle,
+        y: yMiddle,
         vx: getRandomSpeed(),
         vy: getRandomSpeed(),
         radius: 8,
@@ -145,10 +151,10 @@ function drawBall(space_key_name) {
             ctx.stroke();
         },
         update() {
-            if (space[space_key_name]) {
+
                 ball.x += ball.vx;
                 ball.y += ball.vy;
-            };
+
         },
     };
 };
