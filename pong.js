@@ -111,8 +111,8 @@ var paddleTwo = drawPaddleTwo('K_Up', 'K_Down');
 // ball
 
 function getRandomSpeed(min, max) {
-    min = Math.ceil(6);
-    max = Math.floor(12);
+    min = 6;
+    max = 12;
     return Math.floor(Math.random() * (max - min) + min);
 }
 
@@ -170,11 +170,13 @@ function collision() {
         paddleOne.y < ball.y + ball.radius &&
         paddleOne.y + paddleOne.height > ball.y - ball.radius) {
         ball.vx = -ball.vx;
+        ball.x = paddleOne.x + paddleOne.width + 1 + ball.radius
     };
     if (paddleTwo.x < ball.x + ball.radius &&
         paddleTwo.y < ball.y + ball.radius &&
         paddleTwo.y + paddleTwo.height > ball.y - ball.radius) {
         ball.vx = -ball.vx;
+        ball.x = paddleTwo.x - 1 - ball.radius
     };
 };
 
