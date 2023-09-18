@@ -11,6 +11,7 @@ var keys = {
     K_s: false,
     K_Up: false,
     K_Down: false,
+    K_Space: false,
 };
 
 var keyDict = {
@@ -22,6 +23,7 @@ var keyDict = {
     'ArrowLeft': 'K_Left',
     'ArrowDown': 'K_Down',
     'ArrowRight': 'K_Right',
+    ' ': 'K_Space',
 };
 
 window.onkeydown = function (e) {
@@ -114,23 +116,6 @@ function getRandomSpeed(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-var space = {
-    K_Space: false,
-}
-
-var KeyStart = {
-    ' ': 'K_Space',
-}
-
-/*
-do {
-window.onkeydown = function (evt) {
-    space[KeyStart[evt.key]] = true;
-};
-}
-while (homeScore < 15 || awayScore < 15)
-*/
-
 let xMiddle = (canvas.width / 2);
 let yMiddle = (canvas.height / 2);
 console.log(xMiddle, yMiddle);
@@ -143,6 +128,7 @@ function drawBall(space_key_name) {
         vy: getRandomSpeed(),
         radius: 8,
         color: "gray",
+        isPlaying: false,
         draw() {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
@@ -151,32 +137,43 @@ function drawBall(space_key_name) {
             ctx.stroke();
         },
         update() {
-
-                ball.x += ball.vx;
-                ball.y += ball.vy;
-
+            if (!this.isPlaying && keys[space_key_name]){
+                this.isPlaying = true
+            }
+            if (this.isPlaying){
+                this.resetBall()
+                this.x += this.vx;
+                this.y += this.vy;
+            }
         },
-    };
+        resetBall() {
+            if (ball.x > canvas.width) {
+                homeScore += 1;
+            }
+            if (ball.x < 0) {
+                awayScore += 1;
+            }
+            if (this.x > canvas.width || this.x < 0) {
+                this.x = 400;
+                this.isPlaying = false
+            }
+        }
+    }
 };
-
-function resetBall() {
-    if (ball.x > canvas.width) {
-        ball.x = 400;
-    }
-    if (ball.x < 0) {
-        ball.x = 400;
-    }
-}
 
 var ball = drawBall('K_Space');
 
 // collision
 
 function collision() {
-    if (paddleOne.x < ball.x + ball.radius && paddleOne.x + paddleOne.width > ball.x - ball.radius && paddleOne.y < ball.y + ball.radius && paddleOne.y + paddleOne.height > ball.y - ball.radius) {
+    if (paddleOne.x + paddleOne.width > ball.x - ball.radius &&
+        paddleOne.y < ball.y + ball.radius &&
+        paddleOne.y + paddleOne.height > ball.y - ball.radius) {
         ball.vx = -ball.vx;
     };
-    if (paddleTwo.x < ball.x + ball.radius && paddleTwo.x + paddleTwo.width > ball.x - ball.radius && paddleTwo.y < ball.y + ball.radius && paddleTwo.y + paddleTwo.height > ball.y - ball.radius) {
+    if (paddleTwo.x < ball.x + ball.radius &&
+        paddleTwo.y < ball.y + ball.radius &&
+        paddleTwo.y + paddleTwo.height > ball.y - ball.radius) {
         ball.vx = -ball.vx;
     };
 };
@@ -199,14 +196,6 @@ function drawScore() {
     ctx.fillText(`Away Score: ${awayScore}`, 600, 20);
 };
 
-function scoreCount() {
-    if (ball.x > canvas.width) {
-        homeScore += 1;
-    }
-    if (ball.x < 0) {
-        awayScore += 1;
-    }
-}
 
 /*
 function gameOver() {
@@ -239,9 +228,7 @@ function main() {
     ball.update();
     canvasCollision();
     drawScore();
-    scoreCount();
     collision();
-    resetBall();
     //gameOver();
     gameOverScreen();
 
